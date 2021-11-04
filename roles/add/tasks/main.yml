@@ -1,0 +1,8 @@
+---
+- name: Create executable script
+  file:
+    path: extractip.sh
+    mode: a+x
+- name: Create an ec2 instance and add to hosts
+  include_tasks: add_to_ansible.yml 
+  loop: "{{name_instance}}"

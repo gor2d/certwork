@@ -1,0 +1,12 @@
+---
+- name: to get ip from created instance
+  script: ./extractip.sh {{item}}
+  register: ip
+
+- name: Add IP instances to ansible
+  add_host:
+   hostname: "{{ ip.stdout_lines[0] }}"
+   ansible_user: ubuntu
+   ansible_ssh_private_key_file: "/opt/aws-private-{{item}}.pem"
+   groups:
+     - "{{item}}"

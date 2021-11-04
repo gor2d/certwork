@@ -1,0 +1,51 @@
+---
+- name: Create a volume
+  docker_volume: 
+    name: '{{ volume_name }}'
+
+- name: Creates directory
+  file: 
+    path: '/{{ app_dir }}'
+    state: directory
+
+- name: copy dockerfiles
+  synchronize:
+    src: '{{ app_name }}'
+    dest: '/{{ app_dir }}'
+
+- name: Build image maven
+  docker_image: 
+    name: maven 
+    build:
+      path: '/{{ app_dir }}/{{ app_name }}/maven/' 
+    source: build
+  
+- name: Run container maven
+  docker_container:
+    name: maven
+    image: maven
+    volumes:
+      - volume_one:/opt/war  
+    recreate: yes
+
+#- name: Log into DockerHub 
+#  docker_login:
+#    username: login
+#    password: password
+
+- name: Synchronize two directories on one remote host.
+  synchronize:
+    src: /var/lib/docker/volumes/volume_one/_data/
+    dest: /app/boxfuse/tomcat/
+  delegate_to: "{{ inventory_hostname }}"
+
+
+- name: Build image tomcat
+  docker_image: 
+    name: volodyaaggregion/cw1
+    tag: latest
+    push: yes
+    force_tag: yes
+    build:
+      path: '/{{ app_dir }}/{{ app_name }}/tomcat/' 
+    source: build

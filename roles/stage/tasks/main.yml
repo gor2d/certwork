@@ -1,0 +1,7 @@
+---
+- name: Run container tomcat
+  docker_container:
+    name: tomcat
+    image: egor2d/certwork:latest
+    ports:
+      - "80:8080"
