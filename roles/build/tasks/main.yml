@@ -28,10 +28,10 @@
       - volume_one:/opt/war  
     recreate: yes
 
-#- name: Log into DockerHub 
-#  docker_login:
-#    username: login
-#    password: password
+- name: Log into DockerHub 
+  docker_login:
+    username: login
+    password: password
 
 - name: Synchronize two directories on one remote host.
   synchronize:
